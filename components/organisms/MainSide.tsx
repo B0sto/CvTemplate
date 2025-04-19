@@ -5,6 +5,7 @@ import ExperienceSection from '../moleculs/ExperienceSection'
 import SkillsSection from '../moleculs/SkillsSection'
 import PortfolioSection from '../moleculs/PortfolioSection'
 import ContactsSection from '../moleculs/ContactsSection'
+import FeedbacksSection from '../moleculs/FeedbacksSection'
 
 const MainSide = () => {
   return (
@@ -15,6 +16,7 @@ const MainSide = () => {
       <SkillsSection/>
       <PortfolioSection/>
       <ContactsSection/>
+      <FeedbacksSection/>
     </div>
   )
 }
