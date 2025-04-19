@@ -15,7 +15,7 @@ const Index = () => {
         <p className="text-[14px] leading-[21px] max-w-[500px] font-opensans">
           Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque.
         </p>
-        <Link href={"/portfolio"}>
+        <Link href={"/CvTemplate"}>
           <button className="font-opensans leading-[19.2px] px-[20px] py-[10px] bg-[#222935] rounded-[5px] cursor-pointer hover:bg-[#2c3645] transition duration-[.4s]">
             Know more
           </button>
