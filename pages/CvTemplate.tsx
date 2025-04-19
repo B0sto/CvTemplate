@@ -4,7 +4,7 @@ import React from 'react'
 
 const CvTemplate = () => {
   return (
-    <div className='flex gap-x-[30px] h-screen min-h-screen'>
+    <div className='flex gap-x-[35px] h-screen min-h-screen'>
       <LeftSide/>
       <MainSide/>
     </div> 
