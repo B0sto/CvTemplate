@@ -1,17 +1,21 @@
-import React from 'react'
-import Image from 'next/image'
+import React from "react"
 
-interface LeftSideComp {
-  iconName: string
+interface LeftSideComponentProps {
+  icon: React.ComponentType<{ isActive: boolean }>
   text: string
   isReduced: boolean
+  isActive: boolean
 }
 
-const LeftSideComponent = ({ iconName, text, isReduced }: LeftSideComp) => {
+const LeftSideComponent = ({ icon: Icon, text, isReduced, isActive }: LeftSideComponentProps) => {
   return (
-    <div className={`flex items-center gap-x-[20px] cursor-pointer transition-all duration-250 ${isReduced ? 'justify-center' : ''}`}>
-      <Image src={`/${iconName}`} alt={text} width={14} height={14} />
-      <p className={`transition-opacity duration-300 ${text ? 'block' : 'hidden'} font-opensans text-[#667081] leading-[19.2px]`}>{text}</p>
+    <div className={`flex items-center ${isReduced ? "justify-center" : ''} gap-x-[20px] cursor-pointer transition-all duration-300`}>
+      <Icon isActive={isActive} />
+      {!isReduced && (
+        <p className={`leading-[19.2px] font-opensans ${isActive ? 'text-[#26C17E]' : 'text-[#667081]'}`}>
+          {text}
+        </p>
+      )}
     </div>
   )
 }
