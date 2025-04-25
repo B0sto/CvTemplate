@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useImperativeHandle, forwardRef, useEffect } from 'react'
 import AboutSection from '../moleculs/AboutSection'
 import EducationSection from '../moleculs/EducationSection'
 import ExperienceSection from '../moleculs/ExperienceSection'
@@ -9,10 +9,14 @@ import FeedbacksSection from '../moleculs/FeedbacksSection'
 import Image from 'next/image'
 import upButton from '@/public/upButton.svg'
 
-const MainSide = ({ setActiveSection }: { setActiveSection: (section: string) => void }) => {
-  const mainSideRef = useRef<HTMLDivElement>(null)
+export interface SectionRefs {
+  scrollToSection: (section: string) => void
+}
 
-  const sectionRefs = {
+const MainSide = forwardRef(({ setActiveSection }: { setActiveSection: (section: string) => void }, ref) => {
+  const mainRef = useRef<HTMLDivElement>(null)
+
+  const sectionsRef = {
     About: useRef<HTMLDivElement>(null),
     Education: useRef<HTMLDivElement>(null),
     Experience: useRef<HTMLDivElement>(null),
@@ -22,33 +26,50 @@ const MainSide = ({ setActiveSection }: { setActiveSection: (section: string) =>
     Feedbacks: useRef<HTMLDivElement>(null),
   }
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            const id = entry.target.getAttribute('data-section')
-            if (id) setActiveSection(id)
-          }
+  useImperativeHandle(ref, () => ({
+    scrollToSection: (section: string) => {
+      const el = sectionsRef[section as keyof typeof sectionsRef]?.current
+      if (el && mainRef.current) {
+        mainRef.current.scrollTo({
+          top: el.offsetTop - 20,
+          behavior: 'smooth'
         })
-      },
-      {
-        root: mainSideRef.current,
-        threshold: 0.5,
-        rootMargin: '-10% 0px -20% 0px'
       }
-    )
+    }
+  }))
 
-    Object.values(sectionRefs).forEach(ref => {
-      if (ref.current) observer.observe(ref.current)
-    })
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollContainer = mainRef.current
+      if (!scrollContainer) return
 
-    return () => observer.disconnect()
+      const scrollTop = scrollContainer.scrollTop
+      const offsetTopMap: { [key: string]: number } = {}
+
+      Object.entries(sectionsRef).forEach(([key, ref]) => {
+        if (ref.current) {
+          offsetTopMap[key] = ref.current.offsetTop
+        }
+      })
+
+      const currentSection = Object.entries(offsetTopMap).reduce((closest, [key, offset]) => {
+        return scrollTop >= offset - 100 ? key : closest
+      }, 'About')
+
+      setActiveSection(currentSection)
+    }
+
+    const scrollContainer = mainRef.current
+    scrollContainer?.addEventListener('scroll', handleScroll)
+
+    return () => {
+      scrollContainer?.removeEventListener('scroll', handleScroll)
+    }
   }, [setActiveSection])
 
   const scrollToTop = () => {
-    if (mainSideRef.current) {
-      mainSideRef.current.scrollTo({
+    if (mainRef.current) {
+      mainRef.current.scrollTo({
         top: 0,
         behavior: 'smooth',
       })
@@ -57,27 +78,24 @@ const MainSide = ({ setActiveSection }: { setActiveSection: (section: string) =>
 
   return (
     <div
-      ref={mainSideRef}
-      className='pt-[40px] pr-[36px] flex flex-col gap-y-[50px] h-screen overflow-y-auto relative'
+      ref={mainRef}
+      className='pt-[40px] pr-[36px] flex flex-col gap-y-[50px] h-screen overflow-y-auto relative scroll-smooth'
     >
-      <div ref={sectionRefs.About} data-section="About"><AboutSection /></div>
-      <div ref={sectionRefs.Education} data-section="Education"><EducationSection /></div>
-      <div ref={sectionRefs.Experience} data-section="Experience"><ExperienceSection /></div>
-      <div ref={sectionRefs.Skills} data-section="Skills"><SkillsSection /></div>
-      <div ref={sectionRefs.Portfolio} data-section="Portfolio"><PortfolioSection /></div>
-      <div ref={sectionRefs.Contacts} data-section="Contacts"><ContactsSection /></div>
-      <div ref={sectionRefs.Feedbacks} data-section="Feedbacks"><FeedbacksSection /></div>
+      <div ref={sectionsRef.About} id="About"><AboutSection /></div>
+      <div ref={sectionsRef.Education} id="Education"><EducationSection /></div>
+      <div ref={sectionsRef.Experience} id="Experience"><ExperienceSection /></div>
+      <div ref={sectionsRef.Skills} id="Skills"><SkillsSection /></div>
+      <div ref={sectionsRef.Portfolio} id="Portfolio"><PortfolioSection /></div>
+      <div ref={sectionsRef.Contacts} id="Contacts"><ContactsSection /></div>
+      <div ref={sectionsRef.Feedbacks} id="Feedbacks"><FeedbacksSection /></div>
 
-      <div
-        className="self-end cursor-pointer"
-        onClick={scrollToTop}
-      >
+      <div className="self-end cursor-pointer" onClick={scrollToTop}>
         <div className="bg-[#222935] w-[30px] h-[30px] flex justify-center items-center rounded-t-[5px]">
           <Image src={upButton} alt="upButton" width={17} height={17} />
         </div>
       </div>
     </div>
   )
-}
+})
 
 export default MainSide
