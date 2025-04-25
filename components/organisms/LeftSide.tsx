@@ -3,7 +3,6 @@ import Image from 'next/image'
 import LeftSideComponent from '../atoms/LeftSideComponent'
 import BurgerIcon from '@/public/BurgerIcon'
 import BackIcon from '@/public/BackIcon'
-import Link from 'next/link'
 import AboutIcon from '@/public/AboutIcon'
 import EducationIcon from '@/public/EducationIcon'
 import ExperienceIcon from '@/public/ExperienceIcon'
@@ -14,16 +13,15 @@ import FeedbacksIcon from '@/public/FeedbacksIcon'
 
 interface LeftSideProps {
   activeSection: string
+  scrollToSection: (section: string) => void
 }
 
-const LeftSide = ({ activeSection }: LeftSideProps) => {
+const LeftSide = ({ activeSection, scrollToSection }: LeftSideProps) => {
   const [isReduced, setIsReduced] = useState(false)
 
   const handleReduce = () => {
     setIsReduced(prev => !prev)
   }
-
-
 
   const menuItems = [
     { icon: AboutIcon, label: 'About' },
@@ -47,25 +45,30 @@ const LeftSide = ({ activeSection }: LeftSideProps) => {
 
         <div className='about_container flex flex-col gap-y-[38.5px] justify-center'>
           {menuItems.map(item => (
-            <LeftSideComponent
+            <div
               key={item.label}
-              icon={item.icon}
-              text={!isReduced ? item.label : ''}
-              isReduced={isReduced}
-              isActive={activeSection === item.label}
-            />
+              className="cursor-pointer"
+              onClick={() => scrollToSection(item.label)}
+            >
+              <LeftSideComponent
+                icon={item.icon}
+                text={!isReduced ? item.label : ''}
+                isReduced={isReduced}
+                isActive={activeSection === item.label}
+              />
+            </div>
           ))}
         </div>
       </div>
 
-      <Link href="/" className={`flex gap-x-[10px] items-center justify-center cursor-pointer`}>
+      <div className="flex gap-x-[10px] items-center justify-center cursor-pointer">
         <div className={`transition-all duration-200 ${isReduced ? 'bg-[#26C17E] pr-[14px] pl-[12px] py-[8px] rounded-[5px]' : ''}`}>
           <BackIcon />
         </div>
         {!isReduced && (
           <p className='text-[14px] leading-[16.8px] font-opensans text-white'>Go back</p>
         )}
-      </Link>
+      </div>
 
       <div className={`absolute top-[20px] ${isReduced ? 'left-[54px]' : 'left-[250px]'} transition-all duration-250`}>
         <BurgerIcon onClick={handleReduce} />
