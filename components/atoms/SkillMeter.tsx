@@ -12,7 +12,6 @@ const SkillMeter = () => {
     <div className="relative w-full h-[60px]">
       <div className="absolute top-[20px] w-full h-[1px] bg-[#667081]" />
 
-      {/* Tick marks */}
       {marks.map(({ value }, index) => (
         <div
           key={index}

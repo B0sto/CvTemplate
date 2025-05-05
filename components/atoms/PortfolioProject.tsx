@@ -18,7 +18,6 @@ const PortfolioProject: React.FC<PortfolioProjectProps> = ({
 }) => {
     return (
         <div className="w-full flex flex-col lg:flex-row gap-[20px] items-stretch">
-            {/* Main Image */}
             <div className="relative w-full lg:w-1/3 aspect-[308/190]">
                 <Image
                     src={`/${imageMain}`}
@@ -29,7 +28,6 @@ const PortfolioProject: React.FC<PortfolioProjectProps> = ({
                 />
             </div>
 
-            {/* Text Content */}
             <div className="w-full lg:w-1/3 border border-[#DDD] p-[20px] flex flex-col gap-y-[10px] justify-between">
                 <div>
                     <h3 className="font-opensans font-bold text-[#26C17E] leading-[19.2px]">
@@ -49,7 +47,6 @@ const PortfolioProject: React.FC<PortfolioProjectProps> = ({
                 </a>
             </div>
 
-            {/* Secondary Image */}
             <div className="relative w-full lg:w-1/3 aspect-[308/190]">
                 <Image
                     src={`/${imageSecondary}`}
