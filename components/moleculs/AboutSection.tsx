@@ -1,13 +1,32 @@
-import React from 'react'
+import React, { useState } from 'react'
 import SectionHeader from '../atoms/SectionHeader'
+import OpenEditBtn from '../atoms/OpenEditBtn'
+import AboutModal from '../atoms/AboutModal'
 
 const AboutSection = () => {
-  return (
-    <section className='flex flex-col gap-y-[40px]'>
-        <SectionHeader header='About me'/>
-        <p className='text-[#222935] text-[14px] font-opensans leading-[21px]'>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque</p>
-    </section>
-  )
-}
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [aboutText, setAboutText] = useState('Lorem ipsum dolor sit amet, consectetuer adipiscing elit...');
 
-export default AboutSection
+  return (
+    <section className="flex flex-col gap-y-[40px]">
+      <div className="about_wrapper flex justify-between">
+        <SectionHeader header="About me" />
+        <OpenEditBtn onClick={() => setIsModalOpen(true)} />
+      </div>
+      <p className="text-[#222935] text-[14px] font-opensans leading-[21px]">{aboutText}</p>
+
+      {isModalOpen && (
+        <AboutModal
+          initialText={aboutText}
+          onClose={() => setIsModalOpen(false)}
+          onSave={(newText) => {
+            setAboutText(newText);
+            setIsModalOpen(false);
+          }}
+        />
+      )}
+    </section>
+  );
+};
+
+export default AboutSection;
